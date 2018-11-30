@@ -18,12 +18,17 @@ local MD_RIGHT = 1
 local MD_UP = 2
 local MD_DOWN = 3
 
+local gridBorderColor = Color(0.31, 0.31, 0.31);
+local gridColor = Color(0.15, 0.15, 0.15);
+
 
 function Start()
     -- Execute the common startup for samples
     SampleStart()
 
 	CreateScene()
+
+	CreateGrid()
 
     -- Create "Hello World" Text
     -- CreateText()
@@ -73,6 +78,8 @@ function CreateScene()
 
 		MoveSnake()
 	end
+
+	fruitsprite = cache:GetResource()
 end
 
 function AddSegment()
@@ -151,6 +158,36 @@ function MoveSnake()
 		bodySegment.position = headPos
 		headPos = temp
 	end
+end
+
+function CreateGrid()
+	gridNode_ = scene_:CreateChild("Grid")
+	grid_ = gridNode_:CreateComponent("CustomGeometry")
+	grid_:SetNumGeometries(1)
+	grid_:SetMaterial(cache:GetResource("Material", "Materials/VColUnlit.xml"))
+
+	local Size = gridTileSize * PIXEL_SIZE
+	local halfSizeX = (gridSize / 2) * Size;
+	local halfSizeY = (gridSize / 2) * Size;
+
+	grid_:BeginGeometry(0, LINE_LIST)
+
+	for i = 0, gridSize do
+		grid_:DefineVertex(Vector3(-halfSizeX + i * Size, halfSizeY, 0.0))
+		grid_:DefineColor(((i == 0 or i == gridSize) and gridBorderColor) or gridColor)
+		grid_:DefineVertex(Vector3(-halfSizeX + i * Size, -halfSizeY, 0.0))
+		grid_:DefineColor(((i == 0 or i == gridSize) and gridBorderColor) or gridColor)
+	end
+
+	for i = 0, gridSize do
+		grid_:DefineVertex(Vector3(-halfSizeX, halfSizeY - i * Size, 0.0))
+		grid_:DefineColor(((i == 0 or i == gridSize) and gridBorderColor) or gridColor)
+		grid_:DefineVertex(Vector3(halfSizeX, halfSizeY - i * Size, 0.0))
+		grid_:DefineColor(((i == 0 or i == gridSize) and gridBorderColor) or gridColor)
+	end
+
+	grid_:Commit()
+
 end
 
 function CreateText()
