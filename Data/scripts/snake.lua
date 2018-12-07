@@ -121,16 +121,17 @@ function AddSegment()
 end
 
 function MoveSnake()
-	local headPos = snakeHead_.position
+	local headPos = snakeHead_:GetPosition2D()
 	local Size = gridTileSize * PIXEL_SIZE
 	local halfSizeX = (headPos.x / 2) * Size;
 	local halfSizeY = (headPos.y / 2) * Size;
+	print(string.format("lj pos: %d, %d, %d, %d", headPos.x, headPos.y, headDirection, #snakeBody_))
 
 	if headDirection == MD_LEFT then
 		if headPos.x == -halfSizeX then
-			snakeHead_.position = Vector2(halfSizeX - Size, headPos.y)
+			snakeHead_:SetPosition2D(Vector2(halfSizeX - Size, headPos.y))
 		else
-			snakeHead_.position = Vector2(headPos.x - Size, headPos.y)
+			snakeHead_:SetPosition2D(Vector2(headPos.x - Size, headPos.y))
 		end
 	elseif headDirection == MD_RIGHT then
 		if headPos.x == halfSizeX - size then
@@ -154,8 +155,8 @@ function MoveSnake()
 
 	for i = 1, #snakeBody_ do
 		local bodySegment = snakeBody_[i]
-		local temp = bodySegment.position
-		bodySegment.position = headPos
+		local temp = bodySegment:GetPosition2D()
+		bodySegment:SetPosition2D(headPos)
 		headPos = temp
 	end
 end
