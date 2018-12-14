@@ -12,6 +12,7 @@ local gridTileSize = 16
 local gridSize = 32
 local numObjects = 3
 local snakeBody_ = {}
+local gameState_ = 0
 
 local MD_LEFT = 0
 local MD_RIGHT = 1
@@ -215,8 +216,37 @@ function SubscribeToEvents()
     SubscribeToEvent("Update", "HandleUpdate")
 end
 
+local switch = {
+	[0] = function()
+		if input:GetKeyPress(KEY_SPACE) then
+			StartGame()
+		end
+	end,
+	[1] = function()
+		local timeStep = eventData["TimeStep"]:GetFloat()
+		print("1")
+	end,
+	[2] = function()
+		print("2")
+	end,
+	[3] = function()
+		return
+	end
+}
+
+function StartGame()
+	print ("lj start")
+	gameState_ = 1
+end
+
 function HandleUpdate(eventType, eventData)
     -- Do nothing for now, could be extended to eg. animate the display
+	local f = switch[gameState_]
+	if f then
+		f()
+	else
+		print("switch error")
+	end
 end
 
 function SetupViewport()
