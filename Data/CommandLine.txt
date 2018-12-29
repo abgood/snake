@@ -1,1 +1,1 @@
-scripts/snake.lua
+scripts/iso.lua

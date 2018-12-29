@@ -5,6 +5,7 @@
 --     - Subscribing to and handling of update events
 
 require "scripts/Utilities/Sample"
+require "scripts/ExpirationTimer"
 
 
 local headDirection = nil
@@ -21,6 +22,8 @@ local MD_DOWN = 3
 
 local gridBorderColor = Color(0.31, 0.31, 0.31);
 local gridColor = Color(0.15, 0.15, 0.15);
+
+local moveTimer_ = nil
 
 
 function Start()
