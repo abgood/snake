@@ -9,6 +9,8 @@ function Start()
 	CreateScene()
 
 	CreateUIContent("ISOMETRIC 2.5D DEMO")
+
+	SubscribeToEvents()
 end
 
 function CreateScene()
@@ -51,6 +53,41 @@ function HandleSceneRendered()
 	UnsubscribeFromEvent("EndRendering")
 	SaveScene(true)
 	scene_.updateEnabled = false
+end
+
+function SubscribeToEvents()
+	SubscribeToEvent("Update", "HandleUpdate")
+
+	SubscribeToEvent("PostUpdate", "HandlePostUpdate")
+
+	SubscribeToEvent("PostRenderUpdate", "HandlePostRenderUpdate")
+
+	UnsubscribeFromEvent("SceneUpdate")
+end
+
+function HandleUpdate(eventType, eventData)
+	Zoom(cameraNode:GetComponent("Camera"))
+
+	if input:GetKeyPress(KEY_Z) then drawDebug = not drawDebug end
+
+	if input:GetKeyPress(KEY_F5) then
+		SaveScene()
+	end
+	if input:GetKeyPress(KEY_F7) then
+		ReloadScene(false)
+	end
+end
+
+function HandlePostUpdate(eventType, eventData)
+	if not character2DNode or not cameraNode then return end
+
+	cameraNode.position = Vector3(character2DNode.position.x, character2DNode.position.y, -10)
+end
+
+function HandlePostRenderUpdate(eventType, eventData)
+	if drawDebug then
+		scene_:GetComponent("PhysicsWorld2D"):DrawDebugGeometry(true)
+	end
 end
 
 Character2D = ScriptObject()

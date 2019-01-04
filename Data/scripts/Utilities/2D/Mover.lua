@@ -10,7 +10,7 @@ function Mover:Start()
 end
 
 function Mover:Load(deserializer)
-	self.SetPathAttr(deserializer:ReadBuffer())
+	self:SetPathAttr(deserializer:ReadBuffer())
 end
 
 function Mover:Save(serializer)

@@ -2,6 +2,9 @@ character2DNode = nil
 MOVE_SPEED_SCALE = 1
 MOVE_SPEED_X = 2.5
 zoom = 2
+LIFES = 3
+CAMERA_MIN_DIST = 0.1
+CAMERA_MAX_DIST = 6
 
 function CreateCharacter(info, createObject, friction, position, scale)
 	character2DNode = scene_:CreateChild("Imp")
@@ -213,4 +216,145 @@ end
 
 function CreateUIContent(demoTitle)
 	ui.root.defaultStyle = cache:GetResource("XMLFile", "UI/DefaultStyle.xml")
+	local font = cache:GetResource("Font", "Fonts/Anonymous Pro.ttf")
+
+	local coinsUI = ui.root:CreateChild("BorderImage", "Coins")
+	coinsUI.texture = cache:GetResource("Texture2D", "Urho2D/GoldIcon.png")
+	coinsUI:SetSize(50, 50)
+	coinsUI.imageRect = IntRect(0, 64, 60, 128)
+	coinsUI:SetAlignment(HA_LEFT, VA_TOP)
+	coinsUI:SetPosition(5, 5)
+	local coinsText = coinsUI:CreateChild("Text", "CoinsText")
+	coinsText:SetAlignment(HA_CENTER, VA_CENTER)
+	coinsText:SetFont(font, 24)
+	coinsText.textEffect = TE_SHADOW
+	coinsText.text = character2DNode:GetScriptObject().remainingCoins
+
+	local lifeUI = ui.root:CreateChild("BorderImage", "Life")
+	lifeUI.texture = cache:GetResource("Texture2D", "Urho2D/imp/imp_all.png")
+	lifeUI:SetSize(70, 80)
+	lifeUI:SetAlignment(HA_RIGHT, VA_TOP)
+	lifeUI:SetPosition(-5, 5)
+	local lifeText = lifeUI:CreateChild("Text", "LifeText")
+	lifeText:SetAlignment(HA_CENTER, VA_CENTER)
+	lifeText:SetFont(font, 24)
+	lifeText.textEffect = TE_SHADOW
+	lifeText.text = LIFES
+
+	local fullUI = ui.root:CreateChild("Window", "FullUI")
+	fullUI:SetStyleAuto()
+	fullUI:SetSize(ui.root.width, ui.root.height)
+	fullUI.enabled = false
+
+	local title = fullUI:CreateChild("BorderImage", "Title")
+	title:SetMinSize(fullUI.width, 50)
+	title.texture = cache:GetResource("Texture2D", "Textures/HeightMap.png")
+	title:SetFullImageRect()
+	title:SetAlignment(HA_CENTER, VA_TOP)
+	local titleText = title:CreateChild("Text", "TitleText")
+	titleText:SetAlignment(HA_CENTER, VA_CENTER)
+	titleText:SetFont(font, 24)
+	titleText.text = demoTitle
+
+	local spriteUI = fullUI:CreateChild("BorderImage", "Sprite")
+	spriteUI.texture = cache:GetResource("Texture2D", "Urho2D/imp/imp_all.png")
+	spriteUI:SetSize(238, 271)
+	spriteUI:SetAlignment(HA_CENTER, VA_CENTER)
+	spriteUI:SetPosition(0, -ui.root.height / 4)
+
+	local exitButton = ui.root:CreateChild("Button", "ExitButton")
+	exitButton:SetStyleAuto()
+	exitButton.focusMode = FM_RESETFOCUS
+	exitButton:SetSize(100, 50)
+	exitButton:SetAlignment(HA_CENTER, VA_CENTER)
+	exitButton:SetPosition(-100, 0)
+	local exitText = exitButton:CreateChild("Text", "ExitText")
+	exitText:SetAlignment(HA_CENTER, VA_CENTER)
+	exitText:SetFont(font, 24)
+	exitText.text = "EXIT"
+	SubscribeToEvent(exitButton, "Released", "HandleExitButton")
+
+	local playButton = ui.root:CreateChild("Button", "PlayButton")
+	playButton:SetStyleAuto()
+	playButton.focusMode = FM_RESETFOCUS
+	playButton:SetSize(100, 50)
+	playButton:SetAlignment(HA_CENTER, VA_CENTER)
+	playButton:SetPosition(100, 0)
+	local playText = playButton:CreateChild("Text", "PlayText")
+	playText:SetAlignment(HA_CENTER, VA_CENTER)
+	playText:SetFont(font, 24)
+	playText.text = "PLAY"
+	SubscribeToEvent(playButton, "Released", "HandlePlayButton")
+
+	local instructionText = ui.root:CreateChild("Text", "Instructions")
+	instructionText:SetFont(font, 15)
+	instructionText.textAlignment = HA_CENTER
+    instructionText.text = "Use WASD keys or Arrows to move\nPageUp/PageDown/MouseWheel to zoom\nF5/F7 to save/reload scene\n'Z' to toggle debug geometry\nSpace to fight"
+	instructionText:SetAlignment(HA_CENTER, VA_CENTER)
+	instructionText:SetPosition(0, ui.root.height / 4)
+
+	input.mouseVisible = true
+end
+
+function HandleExitButton()
+	engine:Exit()
+end
+
+function HandlePlayButton()
+	if ui.root:GetChild("FullUI", true) then
+		ui.root:GetChild("FullUI", true):Remove()
+		scene_.updateEnabled = true
+	else
+		ReloadScene(true)
+	end
+
+	ui.root:GetChild("Instructions", true).text = ""
+	ui.root:GetChild("ExitButton", true).visible = false
+	ui.root:GetChild("PlayButton", true).visible = false
+
+	input.mouseVisible = false
+end
+
+function ReloadScene(reInit)
+	local filename = demoFilename
+	if not reInit then
+		filename = demoFilename .. "InGame"
+	end
+
+	scene_:LoadXML(fileSystem:GetProgramDir() .. "Data/Scenes/" .. filename .. ".xml")
+	character2DNode = scene_:GetChild("Imp", true)
+	if not character2DNode then return end
+
+	local character = character2DNode:GetScriptObject()
+	local lifes = character.remainingLifes
+	local coins = character.remainingCoins
+	if reInit then
+		lifes = LIFES
+		coins = character.maxCoins
+	end
+
+	local lifeText = ui.root:GetChild("LifeText", true)
+	lifeText.text = lifes
+	character.remainingLifes = lifes
+
+	local coinsText = ui.root:GetChild("CoinsText", true)
+	coinsText.text = coins
+	character.remainingCoins = coins
+end
+
+function Zoom(camera)
+	if input.mouseMoveWheel then
+		zoom = Clamp(camera.zoom + input.mouseMoveWheel * 0.1, CAMERA_MIN_DIST, CAMERA_MAX_DIST)
+		camera.zoom = zoom
+	end
+
+	if input:GetKeyDown(KEY_PAGEUP) then
+		zoom = Clamp(camera.zoom + input.mouseMoveWheel * 1.01, CAMERA_MIN_DIST, CAMERA_MAX_DIST)
+		camera.zoom = zoom
+	end
+
+	if input:GetKeyDown(KEY_PAGEDOWN) then
+		zoom = Clamp(camera.zoom + input.mouseMoveWheel * 0.99, CAMERA_MIN_DIST, CAMERA_MAX_DIST)
+		camera.zoom = zoom
+	end
 end
