@@ -101,7 +101,7 @@ function CreateOrc()
 	node.scale = character2DNode.scale
 
 	local animatedSprite = node:CreateComponent("AnimatedSprite2D")
-	local animationSet = cache:GetResource("AnimationSet2D", "Urho2D/Orc/orc.scml")
+	local animationSet = cache:GetResource("AnimationSet2D", "Urho2D/Orc/Orc.scml")
 
 	animatedSprite.animationSet = animationSet
 	animatedSprite.animation = "run"
@@ -357,4 +357,13 @@ function Zoom(camera)
 		zoom = Clamp(camera.zoom + input.mouseMoveWheel * 0.99, CAMERA_MIN_DIST, CAMERA_MAX_DIST)
 		camera.zoom = zoom
 	end
+end
+
+function PlaySound(soundName)
+	local soundNode = scene_:CreateChild("Sound")
+	local source = soundNode:CreateComponent("SoundSource")
+	source:Play(cache:GetResource("Sound", "Sounds/" .. soundName))
+end
+
+function SpawnEffect(node)
 end

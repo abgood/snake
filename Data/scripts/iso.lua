@@ -49,6 +49,48 @@ function CreateScene()
 	SubscribeToEvent("EndRendering", HandleSceneRendered)
 end
 
+function HandleCollisionBegin(eventType, eventData)
+	local hitNode = eventData["NodeA"]:GetPtr("Node")
+	if hitNode.name == "Imp" then
+		hitNode = eventData["NodeB"]:GetPtr("Node")
+	end
+	local nodeName = hitNode.name
+    local character = character2DNode:GetScriptObject()
+
+	if nodeName == "Coin" then
+		hitNode:Remove()
+		character.remainingCoins = character.remainingCoins - 1
+		if character.remainingCoins == 0 then
+			ui.root:GetChild("Instructions", true).text = "!!! You have all the coins !!!"
+		end
+		ui.root:GetChild("CoinsText", true).text = character.remainingCoins
+        PlaySound("Powerup.wav")
+	end
+
+	if nodeName == "Orc" then
+		local animatedSprite = character2DNode:GetComponent("AnimatedSprite2D")
+		local deltaX = character2DNode.position.x - hitNode.position.x
+
+		if animatedSprite.animation == "attack" and (deltaX < 0 == animatedSprite.flipX) then
+			hitNode:GetScriptObject().emitTime = 1
+			if not hitNode:GetChild("Emitter", true) then
+				hitNode:GetComponent("RigidBody2D"):Remove()
+				SpawnEffect(hitNode)
+				PlaySound("BigExplosion.wav")
+			end
+		else
+			if not character2DNode:GetChild("Emitter", true) then
+				character.wounded = true;
+				if nodeName == "Orc" then
+					hitNode:GetScriptObject().fightTimer = 1
+				end
+				SpawnEffect(character2DNode)
+				PlaySound("BigExplosion.wav")
+			end
+		end
+	end
+end
+
 function HandleSceneRendered()
 	UnsubscribeFromEvent("EndRendering")
 	SaveScene(true)
@@ -61,6 +103,8 @@ function SubscribeToEvents()
 	SubscribeToEvent("PostUpdate", "HandlePostUpdate")
 
 	SubscribeToEvent("PostRenderUpdate", "HandlePostRenderUpdate")
+
+	SubscribeToEvent("PhysicsBeginContact2D", HandleCollisionBegin)
 
 	UnsubscribeFromEvent("SceneUpdate")
 end
@@ -116,7 +160,7 @@ function Character2D:Update(timeStep)
 
 	if input:GetKeyDown(KEY_RIGHT) or input:GetKeyDown(KEY_D) then
 		moveDir = moveDir + Vector3.RIGHT * speedX
-		animatedSprite.flipX = false
+		animatedSprite.flipX = true
 	end
 
 	if not moveDir:Equals(Vector3.ZERO) then

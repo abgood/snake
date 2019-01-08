@@ -1,20 +1,20 @@
-[Fri Jan 04 18:25:57 2019] INFO: Opened log file F:/snake/logs/iso.lua.log
-[Fri Jan 04 18:25:57 2019] INFO: Created 1 worker thread
-[Fri Jan 04 18:25:57 2019] INFO: Added resource path F:/snake/Data/
-[Fri Jan 04 18:25:57 2019] INFO: Added resource path F:/snake/CoreData/
-[Fri Jan 04 18:25:57 2019] INFO: Adapter used Intel Intel(R) HD Graphics
-[Fri Jan 04 18:25:57 2019] INFO: Set screen mode 800x600 windowed monitor 0
-[Fri Jan 04 18:25:57 2019] INFO: Initialized input
-[Fri Jan 04 18:25:57 2019] INFO: Initialized user interface
-[Fri Jan 04 18:25:57 2019] INFO: Initialized renderer
-[Fri Jan 04 18:25:57 2019] INFO: Set audio mode 44100 Hz stereo interpolated
-[Fri Jan 04 18:25:57 2019] INFO: Initialized engine
-[Fri Jan 04 18:25:57 2019] INFO: Loaded Lua script scripts/iso.lua
-[Fri Jan 04 18:25:57 2019] INFO: Loaded Lua script scripts/Utilities/Sample.lua
-[Fri Jan 04 18:25:57 2019] INFO: Loaded Lua script scripts/Utilities/2D/Sample2D.lua
-[Fri Jan 04 18:25:57 2019] INFO: Executed Lua script scripts/iso.lua
-[Fri Jan 04 18:25:58 2019] INFO: Loaded Lua script scripts/Utilities/2D/Mover.lua
-[Fri Jan 04 18:25:58 2019] INFO: Executed Lua script scripts/Utilities/2D/Mover.lua
+[Tue Jan 08 15:51:50 2019] INFO: Opened log file F:/snake/logs/iso.lua.log
+[Tue Jan 08 15:51:50 2019] INFO: Created 1 worker thread
+[Tue Jan 08 15:51:50 2019] INFO: Added resource path F:/snake/Data/
+[Tue Jan 08 15:51:50 2019] INFO: Added resource path F:/snake/CoreData/
+[Tue Jan 08 15:51:50 2019] INFO: Adapter used Intel Intel(R) HD Graphics
+[Tue Jan 08 15:51:50 2019] INFO: Set screen mode 800x600 windowed monitor 0
+[Tue Jan 08 15:51:50 2019] INFO: Initialized input
+[Tue Jan 08 15:51:50 2019] INFO: Initialized user interface
+[Tue Jan 08 15:51:50 2019] INFO: Initialized renderer
+[Tue Jan 08 15:51:50 2019] INFO: Set audio mode 44100 Hz stereo interpolated
+[Tue Jan 08 15:51:50 2019] INFO: Initialized engine
+[Tue Jan 08 15:51:50 2019] INFO: Loaded Lua script scripts/iso.lua
+[Tue Jan 08 15:51:50 2019] INFO: Loaded Lua script scripts/Utilities/Sample.lua
+[Tue Jan 08 15:51:50 2019] INFO: Loaded Lua script scripts/Utilities/2D/Sample2D.lua
+[Tue Jan 08 15:51:50 2019] INFO: Executed Lua script scripts/iso.lua
+[Tue Jan 08 15:51:51 2019] INFO: Loaded Lua script scripts/Utilities/2D/Mover.lua
+[Tue Jan 08 15:51:51 2019] INFO: Executed Lua script scripts/Utilities/2D/Mover.lua
 lj movingObject: 0, 5, 0, 0
 lj movingObject: 1, 5, 0, 0
 lj movingObject: 2, 9, 0, 0
@@ -23,4 +23,4 @@ lj movingObject: 4, 40, 0, 0
 lj movingObject: 5, 6, 0, 0
 lj movingObject: 6, 12, 0, 0
 lj movingObject: 7, 11, 0, 0
-[Fri Jan 04 18:25:59 2019] INFO: Saving scene to F:/snake/Data/Scenes/iso.xml
+[Tue Jan 08 15:51:51 2019] INFO: Saving scene to F:/snake/Data/Scenes/iso.xml

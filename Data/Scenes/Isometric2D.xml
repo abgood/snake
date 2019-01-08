@@ -241,7 +241,7 @@
 		</component>
 		<component type="LuaScriptInstance" id="1207">
 			<attribute name="Script Object Type" value="Character2D" />
-			<attribute name="remainingLifes" value="0" />
+			<attribute name="remainingLifes" value="3" />
 			<attribute name="maxCoins" value="11" />
 			<attribute name="killed" value="false" />
 			<attribute name="remainingCoins" value="11" />
